@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Signal Radar — LinkedIn Post Intent Capture</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#0d1117; --surface:#161b22; --surface-2:#21262d;
+  --border:#30363d; --border-soft:#282e38; --text:#f0f6fc;
+  --text-muted:#8b949e; --linkedin-blue:#0a66c2; --linkedin-soft:rgba(10,102,194,0.15);
+  --teal:#44e3c4; --rose:#f85149; --radius:12px;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.5; padding:40px 24px 100px;}
+.wrap{max-width:1320px; margin:0 auto;}
+.eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--linkedin-blue); display:flex; align-items:center; gap:8px; margin-bottom:12px; font-weight:600;}
+.pulse-dot{width:8px; height:8px; border-radius:50%; background:var(--linkedin-blue); animation:pulse 2.2s infinite;}
+@keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(10,102,194,0.65);} 70%{box-shadow:0 0 0 8px rgba(10,102,194,0);} 100%{box-shadow:0 0 0 0 rgba(10,102,194,0);} }
+h1{font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; margin:0 0 8px; letter-spacing:-0.02em;}
+.sub{color:var(--text-muted); font-size:15px; max-width:750px; margin-bottom:28px;}
+.panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:26px; margin-bottom:24px;}
+.panel h2{font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin:0 0 16px;}
+.chip-grid{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
+.chip{font-family:'JetBrains Mono',monospace; font-size:12px; padding:8px 14px; border-radius:30px; border:1px solid var(--border); background:var(--surface-2); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:8px;}
+.chip.active{background:var(--linkedin-soft); border-color:var(--linkedin-blue); color:#70b5ff;}
+.chip .x{opacity:0.5; cursor:pointer;} .chip .x:hover{opacity:1; color:var(--rose);}
+.add-query-row{display:flex; gap:10px; margin-bottom:8px;}
+input{flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:10px 14px;}
+input:focus{outline:none; border-color:var(--linkedin-blue);}
+.btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; border:none; border-radius:8px; padding:12px 20px; cursor:pointer;}
+.btn-primary{background:var(--linkedin-blue); color:#fff;} .btn-primary:disabled{opacity:0.4; cursor:not-allowed;}
+.btn-ghost{background:transparent; color:var(--text-muted); border:1px solid var(--border);}
+.run-row{display:flex; align-items:center; gap:16px; margin-top:20px;}
+.status-line{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--text-muted); display:flex; align-items:center; gap:8px;}
+.spinner{width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--linkedin-blue); border-radius:50%; display:inline-block; animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.table-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface);}
+table{border-collapse:collapse; width:100%; min-width:1100px;}
+thead th{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); text-align:left; padding:14px 16px; background:var(--surface-2); border-bottom:1px solid var(--border);}
+tbody td{padding:16px; border-bottom:1px solid var(--border-soft); font-size:13.5px; color:var(--text);}
+td.name-cell{font-family:'Space Grotesk',sans-serif; font-weight:600; color:#fff;}
+td.content-cell{max-width:400px; color:#d1d5db;}
+.post-link{color:var(--teal); text-decoration:none; font-size:12.5px; margin-top:6px; display:inline-block;}
+.icon-btn{background:transparent; border:1px solid var(--border); color:var(--text-muted); width:28px; height:28px; border-radius:6px; cursor:pointer;}
+.empty-state{text-align:center; padding:60px 20px; color:var(--text-muted); border:1px dashed var(--border); border-radius:var(--radius);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow"><span class="pulse-dot"></span>LinkedIn Intent Radar</div>
+  <h1>Signal Radar — Post Harvester</h1>
+  <p class="sub">Input your target search terms below. The agent executes a live web sweep targeting public LinkedIn posts matching your criteria.</p>
+
+  <div class="panel">
+    <div class="chip-grid" id="chipGrid"></div>
+    <div class="add-query-row">
+      <input id="customQueryInput" placeholder="Add search phrase (e.g., &quot;hiring UI/UX designer&quot;)">
+      <button class="btn btn-ghost" onclick="addCustomQuery()">Add</button>
+    </div>
+    <div class="run-row">
+      <button class="btn btn-primary" id="runBtn" onclick="runSearches()">Execute LinkedIn Query Scan</button>
+      <span class="status-line" id="statusLine"></span>
+    </div>
+  </div>
+
+  <div class="table-head">
+    <h2>Extracted LinkedIn Leads</h2>
+    <div>
+      <span id="listCount" style="margin-right:12px; color:#8b949e; font-size:13px;">0 entries</span>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table id="leadTable">
+      <thead>
+        <tr>
+          <th>Profile Name</th>
+          <th>Designation</th>
+          <th>Post Text Content & Link</th>
+          <th>Date Found</th>
+          <th>Matched Query</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="leadBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="emptyState" style="display:none;">No matched posts captured yet.</div>
+</div>
+
+<script>
+let queries = [{text: "looking for AI consultant", active: true}, {text: "need help with AI implementation", active: true}];
+let leads = [];
+
+function renderChips(){
+  document.getElementById('chipGrid').innerHTML = queries.map((q, i) => `
+    <div class="chip ${q.active ? 'active' : ''}" onclick="queries[${i}].active = !queries[${i}].active; renderChips();">
+      "${q.text}" <span class="x" onclick="event.stopPropagation(); queries.splice(${i},1); renderChips();">✕</span>
+    </div>`).join('');
+}
+
+function addCustomQuery(){
+  const val = document.getElementById('customQueryInput').value.trim();
+  if(val){ queries.push({text: val, active: true}); document.getElementById('customQueryInput').value = ''; renderChips(); }
+}
+
+async function runSearches() {
+  const selected = queries.filter(q => q.active);
+  if(selected.length === 0) return alert('Select a query.');
+  
+  document.getElementById('runBtn').disabled = true;
+  const status = document.getElementById('statusLine');
+  
+  for (const query of selected) {
+    status.innerHTML = `<span class="spinner"></span> Sweeping the web for "${query.text}"...`;
+    try {
+      // Calls the Python backend running seamlessly on the same Vercel domain
+      const res = await fetch(`/api/search?query=${encodeURIComponent(query.text)}`);
+      
+      if (!res.ok) throw new Error('Network response was not ok');
+      
+      const data = await res.json();
+      if(data.leads) leads = [...data.leads, ...leads];
+      render();
+    } catch (e) {
+      console.error("Backend error:", e);
+      alert("Failed to connect to the backend search engine. Check your API logs.");
+    }
+  }
+  status.textContent = 'Scan completed.';
+  document.getElementById('runBtn').disabled = false;
+}
+
+function clearAll(){ leads = []; render(); }
+
+function render(){
+  document.getElementById('listCount').textContent = leads.length + ' leads';
+  const table = document.getElementById('leadTable'), empty = document.getElementById('emptyState');
+  table.style.display = leads.length ? 'table' : 'none';
+  empty.style.display = leads.length ? 'none' : 'block';
+  
+  document.getElementById('leadBody').innerHTML = leads.map(l => `
+    <tr>
+      <td class="name-cell">${l.name}</td>
+      <td style="color:#8b949e">${l.title}</td>
+      <td class="content-cell">
+        <div>${l.content}</div>
+        <a class="post-link" href="${l.url}" target="_blank">View Post ↗</a>
+      </td>
+      <td style="color:#8b949e">${l.date}</td>
+      <td><span class="chip active">${l.query}</span></td>
+      <td><button class="icon-btn" onclick="this.closest('tr').remove()">✕</button></td>
+    </tr>`).join('');
+}
+
+renderChips();
+render();
+</script>
+</body>
+</html>
