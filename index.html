@@ -2,75 +2,248 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Signal Radar — LinkedIn Post Intent Capture</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signal Radar — Mirai Labs</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root{
-  --bg:#0d1117; --surface:#161b22; --surface-2:#21262d;
-  --border:#30363d; --border-soft:#282e38; --text:#f0f6fc;
-  --text-muted:#8b949e; --linkedin-blue:#0a66c2; --linkedin-soft:rgba(10,102,194,0.15);
-  --teal:#44e3c4; --rose:#f85149; --radius:12px;
+  --ink:#0e1320;
+  --surface:#151b2b;
+  --surface-2:#1c2436;
+  --border:#2a3245;
+  --border-soft:#232a3c;
+  --text:#f5f3ef;
+  --text-muted:#9aa2b1;
+  --text-dim:#5f6779;
+  --accent:#d22b0b;
+  --accent-soft:#f0c7bc;
+  --accent-dark:#9e2410;
+  --accent-glow:rgba(210,43,11,0.16);
+  --gold:#c28e1f;
+  --gold-soft:rgba(194,142,31,0.14);
+  --radius:10px;
 }
+
 *{box-sizing:border-box;}
-body{margin:0; background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.5; padding:40px 24px 100px;}
-.wrap{max-width:1320px; margin:0 auto;}
-.eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--linkedin-blue); display:flex; align-items:center; gap:8px; margin-bottom:12px; font-weight:600;}
-.pulse-dot{width:8px; height:8px; border-radius:50%; background:var(--linkedin-blue); animation:pulse 2.2s infinite;}
-@keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(10,102,194,0.65);} 70%{box-shadow:0 0 0 8px rgba(10,102,194,0);} 100%{box-shadow:0 0 0 0 rgba(10,102,194,0);} }
-h1{font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; margin:0 0 8px; letter-spacing:-0.02em;}
-.sub{color:var(--text-muted); font-size:15px; max-width:750px; margin-bottom:28px;}
-.panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:26px; margin-bottom:24px;}
-.panel h2{font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; margin:0 0 16px;}
-.chip-grid{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
-.chip{font-family:'JetBrains Mono',monospace; font-size:12px; padding:8px 14px; border-radius:30px; border:1px solid var(--border); background:var(--surface-2); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:8px;}
-.chip.active{background:var(--linkedin-soft); border-color:var(--linkedin-blue); color:#70b5ff;}
-.chip .x{opacity:0.5; cursor:pointer;} .chip .x:hover{opacity:1; color:var(--rose);}
-.add-query-row{display:flex; gap:10px; margin-bottom:8px;}
-input{flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:10px 14px;}
-input:focus{outline:none; border-color:var(--linkedin-blue);}
-.btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; border:none; border-radius:8px; padding:12px 20px; cursor:pointer;}
-.btn-primary{background:var(--linkedin-blue); color:#fff;} .btn-primary:disabled{opacity:0.4; cursor:not-allowed;}
-.btn-ghost{background:transparent; color:var(--text-muted); border:1px solid var(--border);}
-.run-row{display:flex; align-items:center; gap:16px; margin-top:20px;}
-.status-line{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--text-muted); display:flex; align-items:center; gap:8px;}
-.spinner{width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--linkedin-blue); border-radius:50%; display:inline-block; animation:spin .7s linear infinite;}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  line-height:1.55;
+  padding:0 0 100px;
+}
+
+/* top nav bar, echoes themirailabs.com header */
+.topbar{
+  border-bottom:1px solid var(--border-soft);
+  padding:18px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.wordmark{
+  font-family:'Source Serif 4',serif;
+  font-weight:600;
+  font-size:16px;
+  letter-spacing:-0.01em;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.wordmark .torii-dot{
+  width:7px;height:7px;border-radius:1px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  display:inline-block;
+}
+.topbar .tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+
+.hero{padding:44px 0 8px;}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--accent);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;font-weight:500;
+}
+.pulse-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+  animation:pulse 2.2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(210,43,11,0.55);}
+  70%{box-shadow:0 0 0 8px rgba(210,43,11,0);}
+  100%{box-shadow:0 0 0 0 rgba(210,43,11,0);}
+}
+@media (prefers-reduced-motion:reduce){ .pulse-dot{animation:none;} }
+
+h1{
+  font-family:'Source Serif 4',serif;
+  font-size:36px;font-weight:600;
+  margin:0 0 10px;letter-spacing:-0.015em;
+}
+.sub{color:var(--text-muted);font-size:15px;max-width:640px;margin-bottom:32px;}
+
+.panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:26px;
+  margin-bottom:22px;
+}
+.panel h2{
+  font-family:'Source Serif 4',serif;
+  font-size:17px;font-weight:600;
+  margin:0 0 16px;color:var(--text);
+}
+
+.chip-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.chip{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;padding:8px 14px;border-radius:30px;
+  border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text-muted);cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  transition:all .12s;
+}
+.chip:hover{border-color:var(--text-dim);}
+.chip.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent-soft);}
+.chip .x{opacity:0.5;cursor:pointer;}
+.chip .x:hover{opacity:1;color:var(--accent);}
+
+.add-query-row{display:flex;gap:10px;margin-bottom:6px;}
+input{
+  flex:1;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);padding:11px 14px;
+  font-family:'Inter',sans-serif;font-size:13.5px;
+}
+input:focus{outline:none;border-color:var(--accent);}
+
+.btn{
+  font-family:'Source Serif 4',serif;font-weight:600;font-size:14px;
+  border:none;border-radius:8px;padding:12px 22px;cursor:pointer;
+  transition:transform .1s, opacity .15s;
+}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:var(--accent-dark);}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border);font-family:'Inter',sans-serif;font-weight:500;font-size:13.5px;padding:10px 16px;}
+.btn-ghost:hover{color:var(--text);border-color:var(--text-dim);}
+
+.run-row{display:flex;align-items:center;gap:16px;margin-top:20px;flex-wrap:wrap;}
+.status-line{
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-muted);
+  display:flex;align-items:center;gap:8px;
+}
+.spinner{
+  width:13px;height:13px;border:2px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  display:inline-block;animation:spin .7s linear infinite;
+}
 @keyframes spin{to{transform:rotate(360deg);}}
-.table-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
-.table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface);}
-table{border-collapse:collapse; width:100%; min-width:1100px;}
-thead th{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); text-align:left; padding:14px 16px; background:var(--surface-2); border-bottom:1px solid var(--border);}
-tbody td{padding:16px; border-bottom:1px solid var(--border-soft); font-size:13.5px; color:var(--text);}
-td.name-cell{font-family:'Space Grotesk',sans-serif; font-weight:600; color:#fff;}
-td.content-cell{max-width:400px; color:#d1d5db;}
-.post-link{color:var(--teal); text-decoration:none; font-size:12.5px; margin-top:6px; display:inline-block;}
-.icon-btn{background:transparent; border:1px solid var(--border); color:var(--text-muted); width:28px; height:28px; border-radius:6px; cursor:pointer;}
-.empty-state{text-align:center; padding:60px 20px; color:var(--text-muted); border:1px dashed var(--border); border-radius:var(--radius);}
+
+.error-box{
+  background:rgba(210,43,11,0.1);border:1px solid rgba(210,43,11,0.35);
+  color:var(--accent-soft);font-size:12.5px;padding:10px 13px;border-radius:7px;
+  margin-top:14px;display:none;
+}
+
+.table-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.table-head h2{font-family:'Source Serif 4',serif;font-size:18px;margin:0;font-weight:600;}
+.count-badge{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);}
+.table-actions{display:flex;gap:8px;align-items:center;}
+
+.table-scroll{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--surface);
+}
+table{border-collapse:collapse;width:100%;min-width:1100px;}
+thead th{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--text-dim);text-align:left;padding:14px 16px;
+  background:var(--surface-2);border-bottom:1px solid var(--border);
+}
+tbody td{
+  padding:16px;border-bottom:1px solid var(--border-soft);
+  font-size:13.5px;color:var(--text);vertical-align:top;
+}
+tbody tr:hover{background:rgba(255,255,255,0.012);}
+tbody tr:last-child td{border-bottom:none;}
+td.name-cell{font-family:'Source Serif 4',serif;font-weight:600;color:var(--text);white-space:nowrap;}
+td.muted{color:var(--text-muted);white-space:nowrap;}
+td.content-cell{max-width:400px;color:#d7d3cb;line-height:1.55;}
+.post-link{color:var(--gold);text-decoration:none;font-size:12.5px;margin-top:8px;display:inline-block;}
+.post-link:hover{text-decoration:underline;}
+.query-tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  background:var(--gold-soft);color:var(--gold);
+  padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+.icon-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  width:28px;height:28px;border-radius:6px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent);}
+
+.empty-state{
+  text-align:center;padding:60px 20px;color:var(--text-dim);
+  border:1px dashed var(--border);border-radius:var(--radius);font-size:13.5px;
+}
+
+footer.foot{
+  max-width:1280px;margin:60px auto 0;padding:20px 32px 0;
+  border-top:1px solid var(--border-soft);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <div class="wordmark"><span class="torii-dot"></span>Mirai Labs</div>
+  <div class="tag">Internal Tool · Signal Radar</div>
+</div>
+
 <div class="wrap">
-  <div class="eyebrow"><span class="pulse-dot"></span>LinkedIn Intent Radar</div>
-  <h1>Signal Radar — Post Harvester</h1>
-  <p class="sub">Input your target search terms below. The agent executes a live web sweep targeting public LinkedIn posts matching your criteria.</p>
+  <div class="hero">
+    <div class="eyebrow"><span class="pulse-dot"></span>COHORT 1 · INTENT CAPTURE</div>
+    <h1>Signal Radar — Post Harvester</h1>
+    <p class="sub">Set your target search phrases below. The agent sweeps public LinkedIn posts matching your criteria and extracts each lead into the table.</p>
+  </div>
 
   <div class="panel">
+    <h2>Search queries</h2>
     <div class="chip-grid" id="chipGrid"></div>
     <div class="add-query-row">
-      <input id="customQueryInput" placeholder="Add search phrase (e.g., &quot;hiring UI/UX designer&quot;)">
+      <input id="customQueryInput" placeholder='Add a search phrase, e.g. "anyone recommend an AI agency"'>
       <button class="btn btn-ghost" onclick="addCustomQuery()">Add</button>
     </div>
     <div class="run-row">
-      <button class="btn btn-primary" id="runBtn" onclick="runSearches()">Execute LinkedIn Query Scan</button>
+      <button class="btn btn-primary" id="runBtn" onclick="runSearches()">Execute LinkedIn query scan</button>
       <span class="status-line" id="statusLine"></span>
     </div>
+    <div class="error-box" id="errorBox"></div>
   </div>
 
   <div class="table-head">
-    <h2>Extracted LinkedIn Leads</h2>
-    <div>
-      <span id="listCount" style="margin-right:12px; color:#8b949e; font-size:13px;">0 entries</span>
-      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    <h2>Extracted leads</h2>
+    <div class="table-actions">
+      <span class="count-badge" id="listCount">0 entries</span>
+      <button class="btn btn-ghost" onclick="exportCSV()">Export CSV</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear all</button>
     </div>
   </div>
 
@@ -78,11 +251,11 @@ td.content-cell{max-width:400px; color:#d1d5db;}
     <table id="leadTable">
       <thead>
         <tr>
-          <th>Profile Name</th>
+          <th>Profile name</th>
           <th>Designation</th>
-          <th>Post Text Content & Link</th>
-          <th>Date Found</th>
-          <th>Matched Query</th>
+          <th>Post text content &amp; link</th>
+          <th>Date found</th>
+          <th>Matched query</th>
           <th></th>
         </tr>
       </thead>
@@ -90,74 +263,147 @@ td.content-cell{max-width:400px; color:#d1d5db;}
     </table>
   </div>
   <div class="empty-state" id="emptyState" style="display:none;">No matched posts captured yet.</div>
+
+  <footer class="foot">
+    <span>© 2026 Mirai Labs</span>
+    <span>Bengaluru, India</span>
+  </footer>
 </div>
 
 <script>
-let queries = [{text: "looking for AI consultant", active: true}, {text: "need help with AI implementation", active: true}];
+const DEFAULT_QUERIES = [
+  "looking for AI consultant",
+  "need help with AI implementation"
+];
+let queries = DEFAULT_QUERIES.map(t => ({ text: t, active: true }));
 let leads = [];
+
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
 
 function renderChips(){
   document.getElementById('chipGrid').innerHTML = queries.map((q, i) => `
-    <div class="chip ${q.active ? 'active' : ''}" onclick="queries[${i}].active = !queries[${i}].active; renderChips();">
-      "${q.text}" <span class="x" onclick="event.stopPropagation(); queries.splice(${i},1); renderChips();">✕</span>
+    <div class="chip ${q.active ? 'active' : ''}" onclick="toggleQuery(${i})">
+      "${escapeHtml(q.text)}" <span class="x" onclick="event.stopPropagation(); removeQuery(${i})">✕</span>
     </div>`).join('');
 }
+function toggleQuery(i){ queries[i].active = !queries[i].active; renderChips(); }
+function removeQuery(i){ queries.splice(i,1); renderChips(); }
 
 function addCustomQuery(){
-  const val = document.getElementById('customQueryInput').value.trim();
-  if(val){ queries.push({text: val, active: true}); document.getElementById('customQueryInput').value = ''; renderChips(); }
+  const input = document.getElementById('customQueryInput');
+  const val = input.value.trim();
+  if(val){ queries.push({text: val, active: true}); input.value = ''; renderChips(); }
+}
+
+function showError(msg){
+  const box = document.getElementById('errorBox');
+  box.textContent = msg;
+  box.style.display = 'block';
+}
+function hideError(){ document.getElementById('errorBox').style.display = 'none'; }
+
+function saveLeads(){
+  try{ localStorage.setItem('mirai_signal_radar_leads', JSON.stringify(leads)); }
+  catch(e){ console.warn('Could not save to localStorage', e); }
+}
+function loadLeads(){
+  try{
+    const raw = localStorage.getItem('mirai_signal_radar_leads');
+    leads = raw ? JSON.parse(raw) : [];
+  }catch(e){ leads = []; }
+}
+
+function dedupeKey(l){
+  return (l.url || '').trim().toLowerCase() || (l.name + '|' + (l.content||'').slice(0,60));
 }
 
 async function runSearches() {
+  hideError();
   const selected = queries.filter(q => q.active);
-  if(selected.length === 0) return alert('Select a query.');
-  
-  document.getElementById('runBtn').disabled = true;
+  if(selected.length === 0){ showError('Select at least one query to run.'); return; }
+
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
   const status = document.getElementById('statusLine');
-  
+  const existingKeys = new Set(leads.map(dedupeKey));
+  let added = 0;
+
   for (const query of selected) {
-    status.innerHTML = `<span class="spinner"></span> Sweeping the web for "${query.text}"...`;
+    status.innerHTML = `<span class="spinner"></span> Sweeping the web for "${escapeHtml(query.text)}"...`;
     try {
-      // Calls the Python backend running seamlessly on the same Vercel domain
       const res = await fetch(`/api/search?query=${encodeURIComponent(query.text)}`);
-      
-      if (!res.ok) throw new Error('Network response was not ok');
-      
+      if (!res.ok) throw new Error('Network response was not ok (' + res.status + ')');
       const data = await res.json();
-      if(data.leads) leads = [...data.leads, ...leads];
+      (data.leads || []).forEach(l => {
+        const key = dedupeKey(l);
+        if(!existingKeys.has(key)){
+          existingKeys.add(key);
+          leads.unshift(l);
+          added++;
+        }
+      });
       render();
     } catch (e) {
-      console.error("Backend error:", e);
-      alert("Failed to connect to the backend search engine. Check your API logs.");
+      showError(`Query "${query.text}" failed — ${e.message}. Continuing with remaining queries.`);
     }
   }
-  status.textContent = 'Scan completed.';
-  document.getElementById('runBtn').disabled = false;
+  saveLeads();
+  status.textContent = `Scan complete — ${added} new lead${added === 1 ? '' : 's'} added.`;
+  btn.disabled = false;
 }
 
-function clearAll(){ leads = []; render(); }
+function clearAll(){
+  if(leads.length === 0) return;
+  if(!confirm('Clear all captured leads? This cannot be undone.')) return;
+  leads = [];
+  saveLeads();
+  render();
+}
+
+function removeLead(idx){
+  leads.splice(idx, 1);
+  saveLeads();
+  render();
+}
 
 function render(){
-  document.getElementById('listCount').textContent = leads.length + ' leads';
+  document.getElementById('listCount').textContent = leads.length + (leads.length === 1 ? ' entry' : ' entries');
   const table = document.getElementById('leadTable'), empty = document.getElementById('emptyState');
   table.style.display = leads.length ? 'table' : 'none';
   empty.style.display = leads.length ? 'none' : 'block';
-  
-  document.getElementById('leadBody').innerHTML = leads.map(l => `
+
+  document.getElementById('leadBody').innerHTML = leads.map((l, i) => `
     <tr>
-      <td class="name-cell">${l.name}</td>
-      <td style="color:#8b949e">${l.title}</td>
+      <td class="name-cell">${escapeHtml(l.name)}</td>
+      <td class="muted">${escapeHtml(l.title)}</td>
       <td class="content-cell">
-        <div>${l.content}</div>
-        <a class="post-link" href="${l.url}" target="_blank">View Post ↗</a>
+        <div>${escapeHtml(l.content)}</div>
+        <a class="post-link" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">View post ↗</a>
       </td>
-      <td style="color:#8b949e">${l.date}</td>
-      <td><span class="chip active">${l.query}</span></td>
-      <td><button class="icon-btn" onclick="this.closest('tr').remove()">✕</button></td>
+      <td class="muted">${escapeHtml(l.date)}</td>
+      <td><span class="query-tag">${escapeHtml(l.query)}</span></td>
+      <td><button class="icon-btn" onclick="removeLead(${i})" title="Remove">✕</button></td>
     </tr>`).join('');
 }
 
+function exportCSV(){
+  if(leads.length === 0) return;
+  const headers = ['Name','Designation','Post Content','Post URL','Date Found','Matched Query'];
+  const rows = leads.map(l => [l.name, l.title, l.content, l.url, l.date, l.query]);
+  const esc = v => `"${String(v||'').replace(/"/g,'""')}"`;
+  const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'mirai_signal_radar_leads.csv';
+  link.click();
+}
+
 renderChips();
+loadLeads();
 render();
 </script>
 </body>
