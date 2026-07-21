@@ -2,9 +2,40 @@ from fastapi import FastAPI, HTTPException
 import requests
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 app = FastAPI()
+
+# =============================================================================
+# Shared date-range helper
+# =============================================================================
+# All search/trigger endpoints accept an optional `date_range` query param:
+#   "day" | "week" | "month" | "3months" | "year" | "all" (default)
+# Each source translates this into whatever its own API expects.
+
+_RANGE_TO_DELTA = {
+    "day": timedelta(days=1),
+    "week": timedelta(days=7),
+    "month": timedelta(days=30),
+    "3months": timedelta(days=90),
+    "year": timedelta(days=365),
+}
+
+_RANGE_TO_GDELT_TIMESPAN = {
+    "day": "1d",
+    "week": "1w",
+    "month": "1m",
+    "3months": "3m",
+    "year": "1y",
+}
+
+
+def compute_since(date_range: str):
+    """Returns a UTC datetime cutoff for the given range key, or None for 'all'/unrecognized."""
+    delta = _RANGE_TO_DELTA.get(date_range)
+    if not delta:
+        return None
+    return datetime.now(timezone.utc) - delta
 
 # =============================================================================
 # SECTION 1 — EXPLICIT STATED INTENT
@@ -28,8 +59,11 @@ def search_reddit(query: str):
 
 # --- Hacker News: LIVE — Algolia public search API, no auth required -----
 
-def search_hn(query: str):
+def search_hn(query: str, date_range: str = "all"):
     params = {"query": query, "tags": "story", "hitsPerPage": 20}
+    since = compute_since(date_range)
+    if since:
+        params["numericFilters"] = f"created_at_i>{int(since.timestamp())}"
     try:
         resp = requests.get("https://hn.algolia.com/api/v1/search_by_date", params=params, timeout=15)
         resp.raise_for_status()
@@ -70,13 +104,13 @@ def search_upwork(query: str):
 
 
 @app.get("/api/search")
-def search(platform: str, query: str):
+def search(platform: str, query: str, date_range: str = "all"):
     if not query:
         raise HTTPException(status_code=400, detail="Query is required")
     if platform == "reddit":
         return {"leads": search_reddit(query)}
     elif platform == "hn":
-        return {"leads": search_hn(query)}
+        return {"leads": search_hn(query, date_range)}
     elif platform == "upwork":
         return {"leads": search_upwork(query)}
     else:
@@ -90,7 +124,7 @@ def search(platform: str, query: str):
 # --- GDELT: LIVE — free global news search, no key required --------------
 # Docs: https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/
 
-def search_gdelt(query: str):
+def search_gdelt(query: str, date_range: str = "all"):
     params = {
         "query": query,
         "mode": "artlist",
@@ -98,6 +132,9 @@ def search_gdelt(query: str):
         "format": "json",
         "sort": "datedesc"
     }
+    timespan = _RANGE_TO_GDELT_TIMESPAN.get(date_range)
+    if timespan:
+        params["timespan"] = timespan
     try:
         resp = requests.get("https://api.gdeltproject.org/api/v2/doc/doc", params=params, timeout=20)
         resp.raise_for_status()
@@ -128,9 +165,14 @@ def search_gdelt(query: str):
 # --- SEC EDGAR: LIVE — free official full-text search, no key required ---
 # Docs: https://www.sec.gov/edgar/search/
 
-def search_sec(query: str):
+def search_sec(query: str, date_range: str = "all"):
     headers = {"User-Agent": "Mirai Labs Signal Radar contact@themirailabs.com"}
     params = {"q": query, "forms": "8-K"}
+    since = compute_since(date_range)
+    if since:
+        params["dateRange"] = "custom"
+        params["startdt"] = since.strftime("%Y-%m-%d")
+        params["enddt"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     try:
         resp = requests.get("https://efts.sec.gov/LATEST/search-index", headers=headers, params=params, timeout=20)
         resp.raise_for_status()
@@ -179,13 +221,13 @@ def search_techstack(query: str):
 
 
 @app.get("/api/triggers")
-def triggers(source: str, query: str):
+def triggers(source: str, query: str, date_range: str = "all"):
     if not query:
         raise HTTPException(status_code=400, detail="Query is required")
     if source == "gdelt":
-        return {"triggers": search_gdelt(query)}
+        return {"triggers": search_gdelt(query, date_range)}
     elif source == "sec":
-        return {"triggers": search_sec(query)}
+        return {"triggers": search_sec(query, date_range)}
     elif source == "techstack":
         return {"triggers": search_techstack(query)}
     else:
