@@ -66,11 +66,25 @@ input{flex:1; background:var(--surface-2); border:1px solid var(--border); borde
 input:focus{outline:none; border-color:var(--accent);}
 
 .date-select{
-  background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
-  color:var(--text); padding:10px 14px; font-family:'JetBrains Mono',monospace;
-  font-size:12.5px; cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  background-color:var(--surface-2);
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239aa2b1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:14px;
+  box-shadow:none;
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  padding:10px 36px 10px 14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12.5px;
+  cursor:pointer;
 }
-.date-select:focus{outline:none; border-color:var(--accent);}
+.date-select:focus{outline:none; border-color:var(--accent); box-shadow:none;}
+.date-select option{background-color:var(--surface-2); color:var(--text);}
 
 .btn{font-family:'Source Serif 4',serif; font-weight:600; font-size:14px; border:none; border-radius:8px; padding:12px 22px; cursor:pointer; transition:transform .1s, opacity .15s;}
 .btn:active{transform:scale(0.98);}
