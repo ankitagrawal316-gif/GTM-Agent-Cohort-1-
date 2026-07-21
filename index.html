@@ -65,6 +65,13 @@ h1.section-title{font-size:26px;}
 input{flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:11px 14px; font-family:'Inter',sans-serif; font-size:13.5px;}
 input:focus{outline:none; border-color:var(--accent);}
 
+.date-select{
+  background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+  color:var(--text); padding:10px 14px; font-family:'JetBrains Mono',monospace;
+  font-size:12.5px; cursor:pointer;
+}
+.date-select:focus{outline:none; border-color:var(--accent);}
+
 .btn{font-family:'Source Serif 4',serif; font-weight:600; font-size:14px; border:none; border-radius:8px; padding:12px 22px; cursor:pointer; transition:transform .1s, opacity .15s;}
 .btn:active{transform:scale(0.98);}
 .btn-primary{background:var(--accent); color:#fff;} .btn-primary:hover{background:var(--accent-dark);}
@@ -138,6 +145,14 @@ footer.foot{max-width:1320px; margin:60px auto 0; padding:20px 32px 0; border-to
     </div>
     <div class="run-row">
       <button class="btn btn-primary" id="intentRunBtn" onclick="runIntentSearches()">Execute intent scan</button>
+      <select id="intentDateRange" class="date-select">
+        <option value="all">All time</option>
+        <option value="day">Past 24 hours</option>
+        <option value="week" selected>Past week</option>
+        <option value="month">Past month</option>
+        <option value="3months">Past 3 months</option>
+        <option value="year">Past year</option>
+      </select>
       <span class="status-line" id="intentStatusLine"></span>
     </div>
     <div class="error-box" id="intentErrorBox"></div>
@@ -176,6 +191,14 @@ footer.foot{max-width:1320px; margin:60px auto 0; padding:20px 32px 0; border-to
     </div>
     <div class="run-row">
       <button class="btn btn-primary trigger" id="triggerRunBtn" onclick="runTriggerSearches()">Execute trigger scan</button>
+      <select id="triggerDateRange" class="date-select">
+        <option value="all">All time</option>
+        <option value="day">Past 24 hours</option>
+        <option value="week">Past week</option>
+        <option value="month" selected>Past month</option>
+        <option value="3months">Past 3 months</option>
+        <option value="year">Past year</option>
+      </select>
       <span class="status-line" id="triggerStatusLine"></span>
     </div>
     <div class="error-box" id="triggerErrorBox"></div>
@@ -283,6 +306,7 @@ async function runIntentSearches(){
 
   const btn = document.getElementById('intentRunBtn'); btn.disabled = true;
   const status = document.getElementById('intentStatusLine');
+  const dateRange = document.getElementById('intentDateRange').value;
   const existingKeys = new Set(intentLeads.map(dedupeKeyIntent));
   let added = 0, done = 0, total = selPlatforms.length * selQueries.length;
 
@@ -291,7 +315,7 @@ async function runIntentSearches(){
       done++;
       status.innerHTML = `<span class="spinner"></span> ${platform.name} — "${escapeHtml(q.text)}" (${done}/${total})`;
       try{
-        const res = await fetch(`/api/search?platform=${platform.id}&query=${encodeURIComponent(q.text)}`);
+        const res = await fetch(`/api/search?platform=${platform.id}&query=${encodeURIComponent(q.text)}&date_range=${dateRange}`);
         if(!res.ok){ const err = await res.json().catch(()=>({})); throw new Error(err.detail || `HTTP ${res.status}`); }
         const data = await res.json();
         (data.leads || []).forEach(l => {
@@ -378,6 +402,7 @@ async function runTriggerSearches(){
 
   const btn = document.getElementById('triggerRunBtn'); btn.disabled = true;
   const status = document.getElementById('triggerStatusLine');
+  const dateRange = document.getElementById('triggerDateRange').value;
   const existingKeys = new Set(triggerLeads.map(dedupeKeyTrigger));
   let added = 0, done = 0, total = selSources.length * selQueries.length;
 
@@ -386,7 +411,7 @@ async function runTriggerSearches(){
       done++;
       status.innerHTML = `<span class="spinner"></span> ${source.name} — "${escapeHtml(q.text)}" (${done}/${total})`;
       try{
-        const res = await fetch(`/api/triggers?source=${source.id}&query=${encodeURIComponent(q.text)}`);
+        const res = await fetch(`/api/triggers?source=${source.id}&query=${encodeURIComponent(q.text)}&date_range=${dateRange}`);
         if(!res.ok){ const err = await res.json().catch(()=>({})); throw new Error(err.detail || `HTTP ${res.status}`); }
         const data = await res.json();
         (data.triggers || []).forEach(t => {
