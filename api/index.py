@@ -1,66 +1,192 @@
 from fastapi import FastAPI, HTTPException
 import requests
-import re
 import os
+import time
+from datetime import datetime, timezone
 
 app = FastAPI()
 
-# Set this in Vercel's dashboard: Project Settings -> Environment Variables -> SERPAPI_KEY
-# Never hardcode API keys in source once this is pushed to a public GitHub repo.
-SERPAPI_KEY = os.environ.get("SERPAPI_KEY", "")
+# =============================================================================
+# SECTION 1 — EXPLICIT STATED INTENT
+# =============================================================================
+
+# --- Reddit: ON HOLD -----------------------------------------------------
+# Reddit closed self-service API registration under its "Responsible Builder
+# Policy" — new apps now require manual approval, and commercial use requires
+# express written approval. Left disabled until that's resolved.
+
+def search_reddit(query: str):
+    raise HTTPException(
+        status_code=501,
+        detail=(
+            "Reddit is on hold. Self-service API access is closed under Reddit's "
+            "Responsible Builder Policy — commercial use now requires explicit "
+            "written approval from Reddit before any access. See README."
+        )
+    )
+
+
+# --- Hacker News: LIVE — Algolia public search API, no auth required -----
+
+def search_hn(query: str):
+    params = {"query": query, "tags": "story", "hitsPerPage": 20}
+    try:
+        resp = requests.get("https://hn.algolia.com/api/v1/search_by_date", params=params, timeout=15)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Hacker News search failed: {str(e)}")
+
+    leads = []
+    for hit in data.get("hits", []):
+        created_at = hit.get("created_at", "")
+        date_str = created_at[:10] if created_at else "Unknown"
+        title = hit.get("title") or ""
+        story_text = hit.get("story_text") or ""
+        content = f"{title} — {story_text}".strip(" —") if story_text else title
+        object_id = hit.get("objectID")
+        url = hit.get("url") or (f"https://news.ycombinator.com/item?id={object_id}" if object_id else "")
+
+        leads.append({
+            "platform": "Hacker News",
+            "name": hit.get("author", "unknown"),
+            "source": "news.ycombinator.com",
+            "content": content[:600],
+            "url": url,
+            "date": date_str,
+            "engagement": f"{hit.get('points', 0)} points · {hit.get('num_comments', 0)} comments",
+            "query": query
+        })
+    return leads
+
+
+# --- Upwork: PENDING -------------------------------------------------------
+
+def search_upwork(query: str):
+    raise HTTPException(
+        status_code=501,
+        detail="Upwork connector pending API approval and anti-circumvention ToS review. See README."
+    )
 
 
 @app.get("/api/search")
-def search_linkedin_posts(query: str):
+def search(platform: str, query: str):
     if not query:
         raise HTTPException(status_code=400, detail="Query is required")
+    if platform == "reddit":
+        return {"leads": search_reddit(query)}
+    elif platform == "hn":
+        return {"leads": search_hn(query)}
+    elif platform == "upwork":
+        return {"leads": search_upwork(query)}
+    else:
+        raise HTTPException(status_code=400, detail=f"Unsupported platform: {platform}")
 
-    if not SERPAPI_KEY:
-        raise HTTPException(
-            status_code=500,
-            detail="SERPAPI_KEY is not configured. Add it in Vercel's project environment variables."
-        )
 
-    # Format the query to specifically target public LinkedIn posts
-    formatted_query = f'site:linkedin.com/posts {query}'
+# =============================================================================
+# SECTION 2 — FIRMOGRAPHIC & TECHNOGRAPHIC TRIGGERS
+# =============================================================================
 
+# --- GDELT: LIVE — free global news search, no key required --------------
+# Docs: https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/
+
+def search_gdelt(query: str):
     params = {
-        "engine": "google",
-        "q": formatted_query,
-        "api_key": SERPAPI_KEY,
-        "num": 10
+        "query": query,
+        "mode": "artlist",
+        "maxrecords": 20,
+        "format": "json",
+        "sort": "datedesc"
     }
-
     try:
-        response = requests.get("https://serpapi.com/search", params=params, timeout=15)
-        response.raise_for_status()
-        data = response.json()
+        resp = requests.get("https://api.gdeltproject.org/api/v2/doc/doc", params=params, timeout=20)
+        resp.raise_for_status()
+        data = resp.json()
     except requests.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Search API error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"GDELT search failed: {str(e)}")
+    except ValueError:
+        # GDELT sometimes returns non-JSON (e.g. empty/error) for malformed queries
+        raise HTTPException(status_code=502, detail="GDELT returned an unexpected response — try simplifying the query.")
 
-    if "organic_results" not in data:
-        return {"leads": []}
-
-    leads = []
-
-    for result in data["organic_results"]:
-        title = result.get("title", "")
-        snippet = result.get("snippet", "")
-        link = result.get("link", "")
-
-        # Extract the user's name from the title
-        name_parts = re.split(r" on LinkedIn| - LinkedIn| \| LinkedIn", title)
-        name = name_parts[0].strip() if name_parts and name_parts[0].strip() else "Unknown user"
-
-        leads.append({
-            "name": name,
-            "title": "View profile for role",
-            "company": "N/A",
-            "content": snippet,
-            "url": link,
-            "date": "Recent",
-            "engagement": "N/A",
+    triggers = []
+    for article in data.get("articles", []):
+        seendate = article.get("seendate", "")
+        date_str = f"{seendate[0:4]}-{seendate[4:6]}-{seendate[6:8]}" if len(seendate) >= 8 else "Unknown"
+        triggers.append({
+            "source": "GDELT News",
+            "headline": article.get("title", ""),
+            "detail": "News mention matching trigger query",
+            "domain": article.get("domain", ""),
+            "country": article.get("sourcecountry", ""),
+            "url": article.get("url", ""),
+            "date": date_str,
             "query": query
         })
+    return triggers
 
-    return {"leads": leads}
+
+# --- SEC EDGAR: LIVE — free official full-text search, no key required ---
+# Docs: https://www.sec.gov/edgar/search/
+
+def search_sec(query: str):
+    headers = {"User-Agent": "Mirai Labs Signal Radar contact@themirailabs.com"}
+    params = {"q": query, "forms": "8-K"}
+    try:
+        resp = requests.get("https://efts.sec.gov/LATEST/search-index", headers=headers, params=params, timeout=20)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"SEC EDGAR search failed: {str(e)}")
+    except ValueError:
+        raise HTTPException(status_code=502, detail="SEC EDGAR returned an unexpected response.")
+
+    triggers = []
+    for hit in data.get("hits", {}).get("hits", []):
+        src = hit.get("_source", {})
+        display_names = src.get("display_names", [])
+        company = display_names[0] if display_names else "Unknown company"
+        filed_date = src.get("file_date", "Unknown")
+        ciks = src.get("ciks", [])
+        cik = ciks[0] if ciks else None
+        filing_url = (
+            f"https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={cik}&type=8-K"
+            if cik else "https://www.sec.gov/cgi-bin/browse-edgar"
+        )
+
+        triggers.append({
+            "source": "SEC EDGAR",
+            "headline": company,
+            "detail": f"{src.get('form', '8-K')} filing",
+            "domain": "sec.gov",
+            "country": "US",
+            "url": filing_url,
+            "date": filed_date,
+            "query": query
+        })
+    return triggers
+
+
+# --- Tech stack (BuiltWith / Wappalyzer): PENDING -------------------------
+# Both require a paid API key for programmatic domain lookups at any real
+# volume. Add BUILTWITH_API_KEY as an env var and implement here if you
+# decide to proceed.
+
+def search_techstack(query: str):
+    raise HTTPException(
+        status_code=501,
+        detail="Tech-stack detection pending a paid BuiltWith/Wappalyzer API key. Not wired up yet."
+    )
+
+
+@app.get("/api/triggers")
+def triggers(source: str, query: str):
+    if not query:
+        raise HTTPException(status_code=400, detail="Query is required")
+    if source == "gdelt":
+        return {"triggers": search_gdelt(query)}
+    elif source == "sec":
+        return {"triggers": search_sec(query)}
+    elif source == "techstack":
+        return {"triggers": search_techstack(query)}
+    else:
+        raise HTTPException(status_code=400, detail=f"Unsupported source: {source}")
