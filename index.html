@@ -8,206 +8,105 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root{
-  --ink:#0e1320;
-  --surface:#151b2b;
-  --surface-2:#1c2436;
-  --border:#2a3245;
-  --border-soft:#232a3c;
-  --text:#f5f3ef;
-  --text-muted:#9aa2b1;
-  --text-dim:#5f6779;
-  --accent:#d22b0b;
-  --accent-soft:#f0c7bc;
-  --accent-dark:#9e2410;
-  --accent-glow:rgba(210,43,11,0.16);
-  --gold:#c28e1f;
-  --gold-soft:rgba(194,142,31,0.14);
+  --ink:#0e1320; --surface:#151b2b; --surface-2:#1c2436;
+  --border:#2a3245; --border-soft:#232a3c; --text:#f5f3ef;
+  --text-muted:#9aa2b1; --text-dim:#5f6779;
+  --accent:#d22b0b; --accent-soft:#f0c7bc; --accent-dark:#9e2410; --accent-glow:rgba(210,43,11,0.16);
+  --gold:#c28e1f; --gold-soft:rgba(194,142,31,0.14);
+  --hn:#ff8a00; --hn-soft:rgba(255,138,0,0.14);
+  --teal:#3fb6a8; --teal-soft:rgba(63,182,168,0.14);
   --radius:10px;
 }
-
 *{box-sizing:border-box;}
-body{
-  margin:0;
-  background:var(--ink);
-  color:var(--text);
-  font-family:'Inter',system-ui,sans-serif;
-  line-height:1.55;
-  padding:0 0 100px;
-}
+body{margin:0; background:var(--ink); color:var(--text); font-family:'Inter',system-ui,sans-serif; line-height:1.55; padding:0 0 100px;}
 
-/* top nav bar, echoes themirailabs.com header */
-.topbar{
-  border-bottom:1px solid var(--border-soft);
-  padding:18px 32px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.wordmark{
-  font-family:'Source Serif 4',serif;
-  font-weight:600;
-  font-size:16px;
-  letter-spacing:-0.01em;
-  color:var(--text);
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-.wordmark .torii-dot{
-  width:7px;height:7px;border-radius:1px;
-  background:var(--gold);
-  transform:rotate(45deg);
-  display:inline-block;
-}
-.topbar .tag{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--text-dim);
-}
+.topbar{border-bottom:1px solid var(--border-soft); padding:18px 32px; display:flex; align-items:center; justify-content:space-between;}
+.wordmark{font-family:'Source Serif 4',serif; font-weight:600; font-size:16px; letter-spacing:-0.01em; color:var(--text); display:flex; align-items:center; gap:9px;}
+.wordmark .torii-dot{width:7px; height:7px; border-radius:1px; background:var(--gold); transform:rotate(45deg); display:inline-block;}
+.topbar .tag{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim);}
 
-.wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
-
-.hero{padding:44px 0 8px;}
-.eyebrow{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
-  color:var(--accent);
-  display:flex;align-items:center;gap:8px;margin-bottom:14px;font-weight:500;
-}
-.pulse-dot{
-  width:7px;height:7px;border-radius:50%;background:var(--accent);
-  animation:pulse 2.2s infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(210,43,11,0.55);}
-  70%{box-shadow:0 0 0 8px rgba(210,43,11,0);}
-  100%{box-shadow:0 0 0 0 rgba(210,43,11,0);}
-}
+.wrap{max-width:1320px; margin:0 auto; padding:0 32px;}
+.hero{padding:40px 0 8px;}
+.section-divider{margin:56px 0 28px; padding-top:32px; border-top:1px solid var(--border-soft);}
+.eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:8px; margin-bottom:14px; font-weight:500;}
+.eyebrow.trigger{color:var(--teal);}
+.pulse-dot{width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 2.2s infinite;}
+.pulse-dot.trigger{background:var(--teal);}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(210,43,11,0.55);} 70%{box-shadow:0 0 0 8px rgba(210,43,11,0);} 100%{box-shadow:0 0 0 0 rgba(210,43,11,0);}}
 @media (prefers-reduced-motion:reduce){ .pulse-dot{animation:none;} }
 
-h1{
-  font-family:'Source Serif 4',serif;
-  font-size:36px;font-weight:600;
-  margin:0 0 10px;letter-spacing:-0.015em;
-}
-.sub{color:var(--text-muted);font-size:15px;max-width:640px;margin-bottom:32px;}
+h1{font-family:'Source Serif 4',serif; font-size:34px; font-weight:600; margin:0 0 10px; letter-spacing:-0.015em;}
+h1.section-title{font-size:26px;}
+.sub{color:var(--text-muted); font-size:15px; max-width:700px; margin-bottom:26px;}
 
-.panel{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:26px;
-  margin-bottom:22px;
-}
-.panel h2{
-  font-family:'Source Serif 4',serif;
-  font-size:17px;font-weight:600;
-  margin:0 0 16px;color:var(--text);
-}
+.panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:26px; margin-bottom:22px;}
+.panel h2{font-family:'Source Serif 4',serif; font-size:17px; font-weight:600; margin:0 0 16px; color:var(--text);}
 
-.chip-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
-.chip{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;padding:8px 14px;border-radius:30px;
-  border:1px solid var(--border);background:var(--surface-2);
-  color:var(--text-muted);cursor:pointer;
-  display:flex;align-items:center;gap:8px;
-  transition:all .12s;
-}
+.platform-grid{display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;}
+.platform-card{border:1px solid var(--border); border-radius:8px; padding:14px 18px; background:var(--surface-2); cursor:pointer; min-width:200px; display:flex; align-items:center; gap:12px; transition:all .12s;}
+.platform-card:hover{border-color:var(--text-dim);}
+.platform-card.active{border-color:var(--accent); background:var(--accent-glow);}
+.platform-card.active.trigger{border-color:var(--teal); background:var(--teal-soft);}
+.platform-card.disabled{opacity:0.5; cursor:not-allowed;}
+.platform-dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
+.platform-dot.hn{background:var(--hn);} .platform-dot.reddit{background:var(--text-dim);} .platform-dot.upwork{background:var(--text-dim);}
+.platform-dot.gdelt{background:var(--teal);} .platform-dot.sec{background:var(--gold);} .platform-dot.techstack{background:var(--text-dim);}
+.platform-name{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13.5px;}
+.platform-status{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim); margin-top:2px;}
+
+.chip-grid{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
+.chip{font-family:'JetBrains Mono',monospace; font-size:12px; padding:8px 14px; border-radius:30px; border:1px solid var(--border); background:var(--surface-2); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; gap:8px; transition:all .12s;}
 .chip:hover{border-color:var(--text-dim);}
-.chip.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent-soft);}
-.chip .x{opacity:0.5;cursor:pointer;}
-.chip .x:hover{opacity:1;color:var(--accent);}
+.chip.active{background:var(--accent-glow); border-color:var(--accent); color:var(--accent-soft);}
+.chip.active.trigger{background:var(--teal-soft); border-color:var(--teal); color:var(--teal);}
+.chip .x{opacity:0.5; cursor:pointer;} .chip .x:hover{opacity:1; color:var(--accent);}
 
-.add-query-row{display:flex;gap:10px;margin-bottom:6px;}
-input{
-  flex:1;background:var(--surface-2);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);padding:11px 14px;
-  font-family:'Inter',sans-serif;font-size:13.5px;
-}
-input:focus{outline:none;border-color:var(--accent);}
+.add-query-row{display:flex; gap:10px; margin-bottom:6px;}
+input{flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:11px 14px; font-family:'Inter',sans-serif; font-size:13.5px;}
+input:focus{outline:none; border-color:var(--accent);}
 
-.btn{
-  font-family:'Source Serif 4',serif;font-weight:600;font-size:14px;
-  border:none;border-radius:8px;padding:12px 22px;cursor:pointer;
-  transition:transform .1s, opacity .15s;
-}
+.btn{font-family:'Source Serif 4',serif; font-weight:600; font-size:14px; border:none; border-radius:8px; padding:12px 22px; cursor:pointer; transition:transform .1s, opacity .15s;}
 .btn:active{transform:scale(0.98);}
-.btn-primary{background:var(--accent);color:#fff;}
-.btn-primary:hover{background:var(--accent-dark);}
-.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
-.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border);font-family:'Inter',sans-serif;font-weight:500;font-size:13.5px;padding:10px 16px;}
-.btn-ghost:hover{color:var(--text);border-color:var(--text-dim);}
+.btn-primary{background:var(--accent); color:#fff;} .btn-primary:hover{background:var(--accent-dark);}
+.btn-primary.trigger{background:var(--teal); color:#0e1320;} .btn-primary.trigger:hover{background:#329186;}
+.btn-primary:disabled{opacity:0.4; cursor:not-allowed;}
+.btn-ghost{background:transparent; color:var(--text-muted); border:1px solid var(--border); font-family:'Inter',sans-serif; font-weight:500; font-size:13.5px; padding:10px 16px;}
+.btn-ghost:hover{color:var(--text); border-color:var(--text-dim);}
 
-.run-row{display:flex;align-items:center;gap:16px;margin-top:20px;flex-wrap:wrap;}
-.status-line{
-  font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-muted);
-  display:flex;align-items:center;gap:8px;
-}
-.spinner{
-  width:13px;height:13px;border:2px solid var(--border);
-  border-top-color:var(--accent);border-radius:50%;
-  display:inline-block;animation:spin .7s linear infinite;
-}
+.run-row{display:flex; align-items:center; gap:16px; margin-top:20px; flex-wrap:wrap;}
+.status-line{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--text-muted); display:flex; align-items:center; gap:8px;}
+.spinner{width:13px; height:13px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; display:inline-block; animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-.error-box{
-  background:rgba(210,43,11,0.1);border:1px solid rgba(210,43,11,0.35);
-  color:var(--accent-soft);font-size:12.5px;padding:10px 13px;border-radius:7px;
-  margin-top:14px;display:none;
-}
+.error-box{background:rgba(210,43,11,0.1); border:1px solid rgba(210,43,11,0.35); color:var(--accent-soft); font-size:12.5px; padding:10px 13px; border-radius:7px; margin-top:14px; display:none;}
 
-.table-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
-.table-head h2{font-family:'Source Serif 4',serif;font-size:18px;margin:0;font-weight:600;}
-.count-badge{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);}
-.table-actions{display:flex;gap:8px;align-items:center;}
+.table-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;}
+.table-head h2{font-family:'Source Serif 4',serif; font-size:18px; margin:0; font-weight:600;}
+.count-badge{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-dim);}
+.table-actions{display:flex; gap:8px; align-items:center;}
 
-.table-scroll{
-  overflow-x:auto;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  background:var(--surface);
-}
-table{border-collapse:collapse;width:100%;min-width:1100px;}
-thead th{
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--text-dim);text-align:left;padding:14px 16px;
-  background:var(--surface-2);border-bottom:1px solid var(--border);
-}
-tbody td{
-  padding:16px;border-bottom:1px solid var(--border-soft);
-  font-size:13.5px;color:var(--text);vertical-align:top;
-}
+.table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface);}
+table{border-collapse:collapse; width:100%; min-width:1100px;}
+thead th{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-dim); text-align:left; padding:14px 16px; background:var(--surface-2); border-bottom:1px solid var(--border);}
+tbody td{padding:16px; border-bottom:1px solid var(--border-soft); font-size:13.5px; color:var(--text); vertical-align:top;}
 tbody tr:hover{background:rgba(255,255,255,0.012);}
 tbody tr:last-child td{border-bottom:none;}
-td.name-cell{font-family:'Source Serif 4',serif;font-weight:600;color:var(--text);white-space:nowrap;}
-td.muted{color:var(--text-muted);white-space:nowrap;}
-td.content-cell{max-width:400px;color:#d7d3cb;line-height:1.55;}
-.post-link{color:var(--gold);text-decoration:none;font-size:12.5px;margin-top:8px;display:inline-block;}
+td.name-cell{font-family:'Source Serif 4',serif; font-weight:600; color:var(--text); white-space:nowrap;}
+td.muted{color:var(--text-muted); white-space:nowrap;}
+td.content-cell{max-width:380px; color:#d7d3cb; line-height:1.55;}
+.post-link{color:var(--gold); text-decoration:none; font-size:12.5px; margin-top:8px; display:inline-block;}
 .post-link:hover{text-decoration:underline;}
-.query-tag{
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  background:var(--gold-soft);color:var(--gold);
-  padding:3px 10px;border-radius:20px;white-space:nowrap;
-}
-.icon-btn{
-  background:transparent;border:1px solid var(--border);color:var(--text-dim);
-  width:28px;height:28px;border-radius:6px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:12px;
-}
-.icon-btn:hover{color:var(--accent);border-color:var(--accent);}
+.query-tag{font-family:'JetBrains Mono',monospace; font-size:10.5px; background:var(--gold-soft); color:var(--gold); padding:3px 10px; border-radius:20px; white-space:nowrap;}
+.platform-tag{font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:3px 10px; border-radius:20px; white-space:nowrap; display:inline-flex; align-items:center; gap:5px;}
+.platform-tag.hn{background:var(--hn-soft); color:var(--hn);}
+.platform-tag.gdelt{background:var(--teal-soft); color:var(--teal);}
+.platform-tag.sec{background:var(--gold-soft); color:var(--gold);}
+.icon-btn{background:transparent; border:1px solid var(--border); color:var(--text-dim); width:28px; height:28px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;}
+.icon-btn:hover{color:var(--accent); border-color:var(--accent);}
 
-.empty-state{
-  text-align:center;padding:60px 20px;color:var(--text-dim);
-  border:1px dashed var(--border);border-radius:var(--radius);font-size:13.5px;
-}
+.empty-state{text-align:center; padding:60px 20px; color:var(--text-dim); border:1px dashed var(--border); border-radius:var(--radius); font-size:13.5px;}
 
-footer.foot{
-  max-width:1280px;margin:60px auto 0;padding:20px 32px 0;
-  border-top:1px solid var(--border-soft);
-  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
-}
+footer.foot{max-width:1320px; margin:60px auto 0; padding:20px 32px 0; border-top:1px solid var(--border-soft); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
 </style>
 </head>
 <body>
@@ -219,50 +118,84 @@ footer.foot{
 
 <div class="wrap">
   <div class="hero">
-    <div class="eyebrow"><span class="pulse-dot"></span>COHORT 1 · INTENT CAPTURE</div>
-    <h1>Signal Radar — Post Harvester</h1>
-    <p class="sub">Set your target search phrases below. The agent sweeps public LinkedIn posts matching your criteria and extracts each lead into the table.</p>
+    <div class="eyebrow"><span class="pulse-dot"></span>COHORT 1 · SIGNAL CAPTURE</div>
+    <h1>Signal Radar</h1>
+    <p class="sub">Two signal types, two independent scans below: explicit stated intent (people saying they need help) and firmographic/technographic triggers (events that correlate with an AI initiative, even when nobody's said so directly).</p>
   </div>
 
+  <!-- ================= SECTION 1: EXPLICIT STATED INTENT ================= -->
+  <h1 class="section-title">1 · Explicit Stated Intent</h1>
+  <p class="sub">Public posts where someone directly signals they need an AI consultant, agency, or architect.</p>
+
   <div class="panel">
+    <h2>Platforms</h2>
+    <div class="platform-grid" id="intentPlatformGrid"></div>
     <h2>Search queries</h2>
-    <div class="chip-grid" id="chipGrid"></div>
+    <div class="chip-grid" id="intentChipGrid"></div>
     <div class="add-query-row">
-      <input id="customQueryInput" placeholder='Add a search phrase, e.g. "anyone recommend an AI agency"'>
-      <button class="btn btn-ghost" onclick="addCustomQuery()">Add</button>
+      <input id="intentCustomQuery" placeholder='Add a search phrase, e.g. "who do you use for AI consulting"'>
+      <button class="btn btn-ghost" onclick="addCustomQuery('intent')">Add</button>
     </div>
     <div class="run-row">
-      <button class="btn btn-primary" id="runBtn" onclick="runSearches()">Execute LinkedIn query scan</button>
-      <span class="status-line" id="statusLine"></span>
+      <button class="btn btn-primary" id="intentRunBtn" onclick="runIntentSearches()">Execute intent scan</button>
+      <span class="status-line" id="intentStatusLine"></span>
     </div>
-    <div class="error-box" id="errorBox"></div>
+    <div class="error-box" id="intentErrorBox"></div>
   </div>
 
   <div class="table-head">
     <h2>Extracted leads</h2>
     <div class="table-actions">
-      <span class="count-badge" id="listCount">0 entries</span>
-      <button class="btn btn-ghost" onclick="exportCSV()">Export CSV</button>
-      <button class="btn btn-ghost" onclick="clearAll()">Clear all</button>
+      <span class="count-badge" id="intentListCount">0 entries</span>
+      <button class="btn btn-ghost" onclick="exportIntentCSV()">Export CSV</button>
+      <button class="btn btn-ghost" onclick="clearIntent()">Clear all</button>
     </div>
   </div>
-
   <div class="table-scroll">
-    <table id="leadTable">
-      <thead>
-        <tr>
-          <th>Profile name</th>
-          <th>Designation</th>
-          <th>Post text content &amp; link</th>
-          <th>Date found</th>
-          <th>Matched query</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="leadBody"></tbody>
+    <table id="intentTable">
+      <thead><tr><th>Platform</th><th>Author</th><th>Source</th><th>Post content</th><th>Date</th><th>Engagement</th><th>Matched query</th><th></th></tr></thead>
+      <tbody id="intentBody"></tbody>
     </table>
   </div>
-  <div class="empty-state" id="emptyState" style="display:none;">No matched posts captured yet.</div>
+  <div class="empty-state" id="intentEmpty" style="display:none;">No matched posts captured yet.</div>
+
+  <!-- ================= SECTION 2: FIRMOGRAPHIC TRIGGERS ================= -->
+  <div class="section-divider">
+    <h1 class="section-title">2 · Firmographic &amp; Technographic Triggers</h1>
+    <p class="sub">Company-level events that correlate with a live or upcoming AI initiative — funding, leadership changes, transformation announcements — sourced from free, official APIs.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Sources</h2>
+    <div class="platform-grid" id="triggerPlatformGrid"></div>
+    <h2>Trigger queries</h2>
+    <div class="chip-grid" id="triggerChipGrid"></div>
+    <div class="add-query-row">
+      <input id="triggerCustomQuery" placeholder='Add a trigger phrase, e.g. "appoints Chief Data Officer"'>
+      <button class="btn btn-ghost" onclick="addCustomQuery('trigger')">Add</button>
+    </div>
+    <div class="run-row">
+      <button class="btn btn-primary trigger" id="triggerRunBtn" onclick="runTriggerSearches()">Execute trigger scan</button>
+      <span class="status-line" id="triggerStatusLine"></span>
+    </div>
+    <div class="error-box" id="triggerErrorBox"></div>
+  </div>
+
+  <div class="table-head">
+    <h2>Detected triggers</h2>
+    <div class="table-actions">
+      <span class="count-badge" id="triggerListCount">0 entries</span>
+      <button class="btn btn-ghost" onclick="exportTriggerCSV()">Export CSV</button>
+      <button class="btn btn-ghost" onclick="clearTriggers()">Clear all</button>
+    </div>
+  </div>
+  <div class="table-scroll">
+    <table id="triggerTable">
+      <thead><tr><th>Source</th><th>Headline / Company</th><th>Trigger detail</th><th>Domain / Country</th><th>Date</th><th>Matched query</th><th></th></tr></thead>
+      <tbody id="triggerBody"></tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="triggerEmpty" style="display:none;">No triggers detected yet.</div>
 
   <footer class="foot">
     <span>© 2026 Mirai Labs</span>
@@ -271,140 +204,247 @@ footer.foot{
 </div>
 
 <script>
-const DEFAULT_QUERIES = [
-  "looking for AI consultant",
-  "need help with AI implementation"
-];
-let queries = DEFAULT_QUERIES.map(t => ({ text: t, active: true }));
-let leads = [];
-
 function escapeHtml(str){
   if(!str) return '';
   return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
-function renderChips(){
-  document.getElementById('chipGrid').innerHTML = queries.map((q, i) => `
-    <div class="chip ${q.active ? 'active' : ''}" onclick="toggleQuery(${i})">
-      "${escapeHtml(q.text)}" <span class="x" onclick="event.stopPropagation(); removeQuery(${i})">✕</span>
+/* ---------------- SECTION 1: EXPLICIT INTENT ---------------- */
+
+const INTENT_PLATFORMS = [
+  { id: 'hn', name: 'Hacker News', status: 'Public API — live', dotClass: 'hn', active: true, disabled: false },
+  { id: 'reddit', name: 'Reddit', status: 'On hold — API access closed', dotClass: 'reddit', active: false, disabled: true },
+  { id: 'upwork', name: 'Upwork', status: 'Pending approval + ToS review', dotClass: 'upwork', active: false, disabled: true }
+];
+const INTENT_DEFAULT_QUERIES = [
+  "looking for an AI consultant",
+  "need help implementing AI",
+  "anyone recommend an AI agency",
+  "AI consultant recommendations",
+  "who should I hire for AI"
+];
+let intentQueries = INTENT_DEFAULT_QUERIES.map(t => ({ text: t, active: true }));
+let intentLeads = [];
+
+function renderIntentPlatforms(){
+  document.getElementById('intentPlatformGrid').innerHTML = INTENT_PLATFORMS.map((p, i) => `
+    <div class="platform-card ${p.active ? 'active' : ''} ${p.disabled ? 'disabled' : ''}"
+         onclick="${p.disabled ? '' : `INTENT_PLATFORMS[${i}].active=!INTENT_PLATFORMS[${i}].active; renderIntentPlatforms();`}">
+      <span class="platform-dot ${p.dotClass}"></span>
+      <div><div class="platform-name">${p.name}</div><div class="platform-status">${p.status}</div></div>
     </div>`).join('');
 }
-function toggleQuery(i){ queries[i].active = !queries[i].active; renderChips(); }
-function removeQuery(i){ queries.splice(i,1); renderChips(); }
 
-function addCustomQuery(){
-  const input = document.getElementById('customQueryInput');
+function renderChips(kind){
+  const queries = kind === 'intent' ? intentQueries : triggerQueries;
+  const gridId = kind === 'intent' ? 'intentChipGrid' : 'triggerChipGrid';
+  const cls = kind === 'trigger' ? ' trigger' : '';
+  document.getElementById(gridId).innerHTML = queries.map((q, i) => `
+    <div class="chip ${q.active ? 'active'+cls : ''}" onclick="toggleQuery('${kind}', ${i})">
+      "${escapeHtml(q.text)}" <span class="x" onclick="event.stopPropagation(); removeQuery('${kind}', ${i})">✕</span>
+    </div>`).join('');
+}
+function toggleQuery(kind, i){
+  if(kind === 'intent'){ intentQueries[i].active = !intentQueries[i].active; } else { triggerQueries[i].active = !triggerQueries[i].active; }
+  renderChips(kind);
+}
+function removeQuery(kind, i){
+  if(kind === 'intent'){ intentQueries.splice(i,1); } else { triggerQueries.splice(i,1); }
+  renderChips(kind);
+}
+function addCustomQuery(kind){
+  const inputId = kind === 'intent' ? 'intentCustomQuery' : 'triggerCustomQuery';
+  const input = document.getElementById(inputId);
   const val = input.value.trim();
-  if(val){ queries.push({text: val, active: true}); input.value = ''; renderChips(); }
+  if(!val) return;
+  if(kind === 'intent'){ intentQueries.push({text: val, active: true}); } else { triggerQueries.push({text: val, active: true}); }
+  input.value = '';
+  renderChips(kind);
 }
 
-function showError(msg){
-  const box = document.getElementById('errorBox');
-  box.textContent = msg;
-  box.style.display = 'block';
+function showError(kind, msg){
+  const box = document.getElementById(kind === 'intent' ? 'intentErrorBox' : 'triggerErrorBox');
+  box.textContent = msg; box.style.display = 'block';
 }
-function hideError(){ document.getElementById('errorBox').style.display = 'none'; }
-
-function saveLeads(){
-  try{ localStorage.setItem('mirai_signal_radar_leads', JSON.stringify(leads)); }
-  catch(e){ console.warn('Could not save to localStorage', e); }
-}
-function loadLeads(){
-  try{
-    const raw = localStorage.getItem('mirai_signal_radar_leads');
-    leads = raw ? JSON.parse(raw) : [];
-  }catch(e){ leads = []; }
+function hideError(kind){
+  document.getElementById(kind === 'intent' ? 'intentErrorBox' : 'triggerErrorBox').style.display = 'none';
 }
 
-function dedupeKey(l){
-  return (l.url || '').trim().toLowerCase() || (l.name + '|' + (l.content||'').slice(0,60));
-}
+function saveIntent(){ try{ localStorage.setItem('mirai_intent_leads', JSON.stringify(intentLeads)); }catch(e){} }
+function loadIntent(){ try{ const r = localStorage.getItem('mirai_intent_leads'); intentLeads = r ? JSON.parse(r) : []; }catch(e){ intentLeads = []; } }
+function dedupeKeyIntent(l){ return (l.url||'').trim().toLowerCase() || (l.platform+'|'+l.name+'|'+(l.content||'').slice(0,60)); }
 
-async function runSearches() {
-  hideError();
-  const selected = queries.filter(q => q.active);
-  if(selected.length === 0){ showError('Select at least one query to run.'); return; }
+async function runIntentSearches(){
+  hideError('intent');
+  const selPlatforms = INTENT_PLATFORMS.filter(p => p.active && !p.disabled);
+  const selQueries = intentQueries.filter(q => q.active);
+  if(selPlatforms.length === 0){ showError('intent', 'Select at least one platform.'); return; }
+  if(selQueries.length === 0){ showError('intent', 'Select at least one query.'); return; }
 
-  const btn = document.getElementById('runBtn');
-  btn.disabled = true;
-  const status = document.getElementById('statusLine');
-  const existingKeys = new Set(leads.map(dedupeKey));
-  let added = 0;
+  const btn = document.getElementById('intentRunBtn'); btn.disabled = true;
+  const status = document.getElementById('intentStatusLine');
+  const existingKeys = new Set(intentLeads.map(dedupeKeyIntent));
+  let added = 0, done = 0, total = selPlatforms.length * selQueries.length;
 
-  for (const query of selected) {
-    status.innerHTML = `<span class="spinner"></span> Sweeping the web for "${escapeHtml(query.text)}"...`;
-    try {
-      const res = await fetch(`/api/search?query=${encodeURIComponent(query.text)}`);
-      if (!res.ok) throw new Error('Network response was not ok (' + res.status + ')');
-      const data = await res.json();
-      (data.leads || []).forEach(l => {
-        const key = dedupeKey(l);
-        if(!existingKeys.has(key)){
-          existingKeys.add(key);
-          leads.unshift(l);
-          added++;
-        }
-      });
-      render();
-    } catch (e) {
-      showError(`Query "${query.text}" failed — ${e.message}. Continuing with remaining queries.`);
+  for(const platform of selPlatforms){
+    for(const q of selQueries){
+      done++;
+      status.innerHTML = `<span class="spinner"></span> ${platform.name} — "${escapeHtml(q.text)}" (${done}/${total})`;
+      try{
+        const res = await fetch(`/api/search?platform=${platform.id}&query=${encodeURIComponent(q.text)}`);
+        if(!res.ok){ const err = await res.json().catch(()=>({})); throw new Error(err.detail || `HTTP ${res.status}`); }
+        const data = await res.json();
+        (data.leads || []).forEach(l => {
+          const key = dedupeKeyIntent(l);
+          if(!existingKeys.has(key)){ existingKeys.add(key); intentLeads.unshift(l); added++; }
+        });
+        renderIntent();
+      }catch(e){ showError('intent', `${platform.name} — "${q.text}" failed: ${e.message}`); }
     }
   }
-  saveLeads();
-  status.textContent = `Scan complete — ${added} new lead${added === 1 ? '' : 's'} added.`;
+  saveIntent();
+  status.textContent = `Scan complete — ${added} new lead${added===1?'':'s'} added.`;
   btn.disabled = false;
 }
 
-function clearAll(){
-  if(leads.length === 0) return;
+function clearIntent(){
+  if(intentLeads.length === 0) return;
   if(!confirm('Clear all captured leads? This cannot be undone.')) return;
-  leads = [];
-  saveLeads();
-  render();
+  intentLeads = []; saveIntent(); renderIntent();
 }
+function removeIntentLead(idx){ intentLeads.splice(idx,1); saveIntent(); renderIntent(); }
 
-function removeLead(idx){
-  leads.splice(idx, 1);
-  saveLeads();
-  render();
-}
-
-function render(){
-  document.getElementById('listCount').textContent = leads.length + (leads.length === 1 ? ' entry' : ' entries');
-  const table = document.getElementById('leadTable'), empty = document.getElementById('emptyState');
-  table.style.display = leads.length ? 'table' : 'none';
-  empty.style.display = leads.length ? 'none' : 'block';
-
-  document.getElementById('leadBody').innerHTML = leads.map((l, i) => `
+function renderIntent(){
+  document.getElementById('intentListCount').textContent = intentLeads.length + (intentLeads.length===1?' entry':' entries');
+  const table = document.getElementById('intentTable'), empty = document.getElementById('intentEmpty');
+  table.style.display = intentLeads.length ? 'table' : 'none';
+  empty.style.display = intentLeads.length ? 'none' : 'block';
+  document.getElementById('intentBody').innerHTML = intentLeads.map((l,i) => `
     <tr>
+      <td><span class="platform-tag hn">${escapeHtml(l.platform)}</span></td>
       <td class="name-cell">${escapeHtml(l.name)}</td>
-      <td class="muted">${escapeHtml(l.title)}</td>
-      <td class="content-cell">
-        <div>${escapeHtml(l.content)}</div>
-        <a class="post-link" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">View post ↗</a>
-      </td>
+      <td class="muted">${escapeHtml(l.source)}</td>
+      <td class="content-cell"><div>${escapeHtml(l.content)}</div><a class="post-link" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">View post ↗</a></td>
       <td class="muted">${escapeHtml(l.date)}</td>
+      <td class="muted">${escapeHtml(l.engagement)}</td>
       <td><span class="query-tag">${escapeHtml(l.query)}</span></td>
-      <td><button class="icon-btn" onclick="removeLead(${i})" title="Remove">✕</button></td>
+      <td><button class="icon-btn" onclick="removeIntentLead(${i})">✕</button></td>
     </tr>`).join('');
 }
 
-function exportCSV(){
-  if(leads.length === 0) return;
-  const headers = ['Name','Designation','Post Content','Post URL','Date Found','Matched Query'];
-  const rows = leads.map(l => [l.name, l.title, l.content, l.url, l.date, l.query]);
+function exportIntentCSV(){
+  if(intentLeads.length === 0) return;
+  const headers = ['Platform','Author','Source','Post Content','Post URL','Date','Engagement','Matched Query'];
+  const rows = intentLeads.map(l => [l.platform,l.name,l.source,l.content,l.url,l.date,l.engagement,l.query]);
+  downloadCSV(headers, rows, 'mirai_explicit_intent_leads.csv');
+}
+
+/* ---------------- SECTION 2: FIRMOGRAPHIC TRIGGERS ---------------- */
+
+const TRIGGER_PLATFORMS = [
+  { id: 'gdelt', name: 'GDELT News', status: 'Free global news API — live', dotClass: 'gdelt', active: true, disabled: false },
+  { id: 'sec', name: 'SEC EDGAR', status: 'Free official API — live (US public cos)', dotClass: 'sec', active: true, disabled: false },
+  { id: 'techstack', name: 'Tech Stack', status: 'Pending — needs paid API key', dotClass: 'techstack', active: false, disabled: true }
+];
+const TRIGGER_DEFAULT_QUERIES = [
+  "raises funding artificial intelligence healthcare",
+  "appoints Chief AI Officer",
+  "digital transformation initiative compliance",
+  "hires Chief Technology Officer fintech",
+  "AI implementation partnership announced"
+];
+let triggerQueries = TRIGGER_DEFAULT_QUERIES.map(t => ({ text: t, active: true }));
+let triggerLeads = [];
+
+function renderTriggerPlatforms(){
+  document.getElementById('triggerPlatformGrid').innerHTML = TRIGGER_PLATFORMS.map((p, i) => `
+    <div class="platform-card ${p.active ? 'active trigger' : ''} ${p.disabled ? 'disabled' : ''}"
+         onclick="${p.disabled ? '' : `TRIGGER_PLATFORMS[${i}].active=!TRIGGER_PLATFORMS[${i}].active; renderTriggerPlatforms();`}">
+      <span class="platform-dot ${p.dotClass}"></span>
+      <div><div class="platform-name">${p.name}</div><div class="platform-status">${p.status}</div></div>
+    </div>`).join('');
+}
+
+function saveTriggers(){ try{ localStorage.setItem('mirai_trigger_leads', JSON.stringify(triggerLeads)); }catch(e){} }
+function loadTriggers(){ try{ const r = localStorage.getItem('mirai_trigger_leads'); triggerLeads = r ? JSON.parse(r) : []; }catch(e){ triggerLeads = []; } }
+function dedupeKeyTrigger(l){ return (l.url||'').trim().toLowerCase() || (l.source+'|'+l.headline+'|'+l.date); }
+
+async function runTriggerSearches(){
+  hideError('trigger');
+  const selSources = TRIGGER_PLATFORMS.filter(p => p.active && !p.disabled);
+  const selQueries = triggerQueries.filter(q => q.active);
+  if(selSources.length === 0){ showError('trigger', 'Select at least one source.'); return; }
+  if(selQueries.length === 0){ showError('trigger', 'Select at least one query.'); return; }
+
+  const btn = document.getElementById('triggerRunBtn'); btn.disabled = true;
+  const status = document.getElementById('triggerStatusLine');
+  const existingKeys = new Set(triggerLeads.map(dedupeKeyTrigger));
+  let added = 0, done = 0, total = selSources.length * selQueries.length;
+
+  for(const source of selSources){
+    for(const q of selQueries){
+      done++;
+      status.innerHTML = `<span class="spinner"></span> ${source.name} — "${escapeHtml(q.text)}" (${done}/${total})`;
+      try{
+        const res = await fetch(`/api/triggers?source=${source.id}&query=${encodeURIComponent(q.text)}`);
+        if(!res.ok){ const err = await res.json().catch(()=>({})); throw new Error(err.detail || `HTTP ${res.status}`); }
+        const data = await res.json();
+        (data.triggers || []).forEach(t => {
+          const key = dedupeKeyTrigger(t);
+          if(!existingKeys.has(key)){ existingKeys.add(key); triggerLeads.unshift(t); added++; }
+        });
+        renderTriggers();
+      }catch(e){ showError('trigger', `${source.name} — "${q.text}" failed: ${e.message}`); }
+    }
+  }
+  saveTriggers();
+  status.textContent = `Scan complete — ${added} new trigger${added===1?'':'s'} added.`;
+  btn.disabled = false;
+}
+
+function clearTriggers(){
+  if(triggerLeads.length === 0) return;
+  if(!confirm('Clear all detected triggers? This cannot be undone.')) return;
+  triggerLeads = []; saveTriggers(); renderTriggers();
+}
+function removeTrigger(idx){ triggerLeads.splice(idx,1); saveTriggers(); renderTriggers(); }
+
+function renderTriggers(){
+  document.getElementById('triggerListCount').textContent = triggerLeads.length + (triggerLeads.length===1?' entry':' entries');
+  const table = document.getElementById('triggerTable'), empty = document.getElementById('triggerEmpty');
+  table.style.display = triggerLeads.length ? 'table' : 'none';
+  empty.style.display = triggerLeads.length ? 'none' : 'block';
+  document.getElementById('triggerBody').innerHTML = triggerLeads.map((t,i) => `
+    <tr>
+      <td><span class="platform-tag ${t.source === 'SEC EDGAR' ? 'sec' : 'gdelt'}">${escapeHtml(t.source)}</span></td>
+      <td class="content-cell"><div>${escapeHtml(t.headline)}</div><a class="post-link" href="${escapeHtml(t.url)}" target="_blank" rel="noopener">View source ↗</a></td>
+      <td class="muted">${escapeHtml(t.detail)}</td>
+      <td class="muted">${escapeHtml(t.domain)}${t.country ? ' · ' + escapeHtml(t.country) : ''}</td>
+      <td class="muted">${escapeHtml(t.date)}</td>
+      <td><span class="query-tag">${escapeHtml(t.query)}</span></td>
+      <td><button class="icon-btn" onclick="removeTrigger(${i})">✕</button></td>
+    </tr>`).join('');
+}
+
+function exportTriggerCSV(){
+  if(triggerLeads.length === 0) return;
+  const headers = ['Source','Headline','Detail','Domain','Country','URL','Date','Matched Query'];
+  const rows = triggerLeads.map(t => [t.source,t.headline,t.detail,t.domain,t.country,t.url,t.date,t.query]);
+  downloadCSV(headers, rows, 'mirai_firmographic_triggers.csv');
+}
+
+function downloadCSV(headers, rows, filename){
   const esc = v => `"${String(v||'').replace(/"/g,'""')}"`;
   const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
   const blob = new Blob([csv], {type:'text/csv'});
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'mirai_signal_radar_leads.csv';
+  link.download = filename;
   link.click();
 }
 
-renderChips();
-loadLeads();
-render();
+renderIntentPlatforms(); renderChips('intent'); loadIntent(); renderIntent();
+renderTriggerPlatforms(); renderChips('trigger'); loadTriggers(); renderTriggers();
 </script>
 </body>
 </html>
